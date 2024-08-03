@@ -1,17 +1,85 @@
 name: Deploy self-hosted ntfy and backend custom signup layer
 
 on:
+    repository_dispatch:
+        types: [trigger_naarad_deployment]
     push:
         branches:
             - "main"
         paths-ignore:
             - "**.md"
             - "LICENSE"
+            - "LICENSE.txt"
             - "frontend/**"
 
 jobs:
+    dockerhub:
+        name: Publish Docker Image(s) to Dockerhub
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Set up QEMU
+              uses: docker/setup-qemu-action@v3
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
+            - name: Login to Docker Hub
+              uses: docker/login-action@v3
+              with:
+                  username: ${{ secrets.DOCKERHUB_USERNAME }}
+                  password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+            - name: Cache Docker layers for Naarad
+              uses: actions/cache@v3
+              with:
+                  path: /tmp/.buildx-cache-naarad
+                  key: ${{ runner.os }}-buildx-naarad-${{ github.sha }}
+                  restore-keys: |
+                      ${{ runner.os }}-buildx-naarad-
+
+            - name: Build & Push Naarad
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  push: true
+                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/naarad:latest
+                  cache-from: type=local,src=/tmp/.buildx-cache-naarad
+                  cache-to: type=local,dest=/tmp/.buildx-cache-naarad-new,mode=max
+
+            - name: Move Naarad cache
+              run: |
+                  rm -rf /tmp/.buildx-cache-naarad
+                  mv /tmp/.buildx-cache-naarad-new /tmp/.buildx-cache-naarad
+
+            - name: Cache Docker layers for Naarad API
+              uses: actions/cache@v3
+              with:
+                  path: /tmp/.buildx-cache-naarad-api
+                  key: ${{ runner.os }}-buildx-naarad-api-${{ github.sha }}
+                  restore-keys: |
+                      ${{ runner.os }}-buildx-naarad-api-
+
+            - name: Build & Push Naarad API
+              uses: docker/build-push-action@v5
+              with:
+                  context: ./backend
+                  push: true
+                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/naarad-api:latest
+                  cache-from: type=local,src=/tmp/.buildx-cache-naarad-api
+                  cache-to: type=local,dest=/tmp/.buildx-cache-naarad-api-new,mode=max
+
+            - name: Move Naarad API cache
+              run: |
+                  rm -rf /tmp/.buildx-cache-naarad-api
+                  mv /tmp/.buildx-cache-naarad-api-new /tmp/.buildx-cache-naarad-api
+
     push:
-        name: Push Stage
+        name: Push Code Stage
+        needs: dockerhub
         runs-on: ubuntu-latest
 
         steps:
@@ -31,13 +99,13 @@ jobs:
                       sudo git fetch origin
                       sudo git reset --hard origin/main
 
-    build:
-        name: Build Stage
+    pull:
+        name: Pull Image Stage
         needs: push
         runs-on: ubuntu-latest
 
         steps:
-            - name: Build the latest container(s)
+            - name: Pull the latest images(s)
               uses: appleboy/ssh-action@master
               env:
                   PROJECT_DIR: ${{ secrets.PROJECT_DIR }}
@@ -50,11 +118,11 @@ jobs:
                   script_stop: true
                   script: |
                       cd "${PROJECT_DIR}/"
-                      sudo docker compose build
+                      sudo docker compose pull
 
     deploy:
         name: Deploy Stage
-        needs: [push, build]
+        needs: pull
         runs-on: ubuntu-latest
 
         steps:
@@ -73,3 +141,23 @@ jobs:
                       cd "${PROJECT_DIR}/"
                       sudo docker compose down
                       sudo docker compose up -d
+
+    healthcheck:
+        name: Healthcheck Stage
+        needs: deploy
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check for the health of Naarad
+              run: |
+                  while true; do
+                      result=$(curl -s -kX GET https://naarad.metakgp.org/v1/health | jq '.healthy')
+                      
+                      if [ "$result" = "true" ]; then
+                          echo "Health check passed. Service is healthy."
+                          break
+                      else
+                          echo "Service not healthy yet. Retrying in 5 seconds..."
+                          sleep 5
+                      fi
+                  done

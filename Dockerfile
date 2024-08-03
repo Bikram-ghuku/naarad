@@ -1,8 +1,6 @@
-FROM binwiederhier/ntfy
+FROM metakgporg/naarad-ntfy
 
-COPY server.yml /etc/ntfy/server.yml
-
-EXPOSE 8000
+ENV TZ="Asia/Kolkata"
 
 # Copy metaploy configuration
 COPY metaploy/naarad.metaploy.conf /
@@ -10,5 +8,7 @@ COPY metaploy/postinstall.sh /
 
 # Set the postinstall script as executable
 RUN chmod +x /postinstall.sh
+
+EXPOSE 8000
 
 ENTRYPOINT ["/postinstall.sh", "ntfy", "serve"]

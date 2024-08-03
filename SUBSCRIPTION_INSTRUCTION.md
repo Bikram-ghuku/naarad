@@ -2,6 +2,24 @@
 
 Narada (Sanskrit: नारद, IAST: Nārada), or Narada Muni, is a sage-divinity, famous in Hindu traditions as a travelling musician and storyteller, who carries **news** and enlightening wisdom ([source](https://en.wikipedia.org/wiki/Narada)). Our naarad delivers news (noticies) to the KGP community.
 
+<details>
+<summary>Table of Contents</summary>
+
+- [User Registration](#user-registration)
+- [Webapp](#webapp)
+    - [User Login](#user-login)
+    - [Configuration Notification](#configuring-notification)
+        - [Enabling WebPush](#enabling-webpush)
+    - [Subscribing to MFTP](#subscribing-to-mftp)
+    - [Mobile Application (Android, iOS)](#mobile-application-android-ios)
+        - [Download NTFY application](#download-ntfy-application)
+        - [Subscribing to MFTP](#subscribing-to-mftp-1)
+        - [Configuring the topic](#configuring-the-topic)
+        - [Downloading Attachment](#downloading-attachment)
+        - [Disabling Battery Optimisations](#disabling-battery-optimisations)
+- [Changing User Password](#changing-user-password)
+</details>
+
 ## User Registration
 
 1. Visit [Naarad Signup](https://naarad.metakgp.org/signup) page
@@ -12,9 +30,12 @@ Narada (Sanskrit: नारद, IAST: Nārada), or Narada Muni, is a sage-divini
 6. Check your institute email for credentials and make sure to keep them safe for future use
 7. Follow through [webapp user login](#user-login) step
 
+> [!Tip]
+> It is recommended to change the auto-generated password.
+
 | ![image](https://github.com/metakgp/naarad/assets/86282911/f4e828c6-fa58-496b-bf09-7cb6cd7d2b09) | ![image](https://github.com/metakgp/naarad/assets/86282911/94e0acad-d05c-4640-a75d-debb3276abcc) |
 | ---------------------------------- | -------------------------------- |
-| ![image](https://github.com/metakgp/naarad/assets/86282911/1aaa2595-15c1-4530-8c91-e06c1790382f) | ![image](https://github.com/metakgp/naarad/assets/86282911/5af29554-8b3a-4776-81fb-26a9af41128b) |
+| ![image](https://github.com/metakgp/naarad/assets/86282911/1aaa2595-15c1-4530-8c91-e06c1790382f) | ![image](https://github.com/metakgp/naarad/assets/86282911/5a9ef215-e805-4621-a257-4a9613e9a895) |
 
 ## Webapp
 
@@ -33,7 +54,7 @@ Narada (Sanskrit: नारद, IAST: Nārada), or Narada Muni, is a sage-divini
 Make sure to grant the webapp notification permission.
 
 <div align="center">
-  <img src="https://github.com/metakgp/naarad/assets/86282911/1b0115cb-0d79-4f70-99c5-7adeb2e92a9c">
+  <img src="https://github.com/metakgp/naarad/assets/86282911/ca0a7afd-17c0-4749-9cba-a0688cbc8f6f">
 </div>
 
 #### Enabling WebPush
@@ -44,10 +65,12 @@ In order to receive notifications even if the [webapp's tab](https://naarad.meta
 2. Enable `Background Notifications` (4th option from top)
 
 > [!Tip]
-> It is recommeded to also change the `Delete Notifications` setting to `Never` in order to store old notifications
+> To receive seamless real-time notifications, following configurations are recommended:
+> 1. Make sure the `Minimum Priority` is set to `Any Priority`, in order to not miss any notification
+> 2. Make sure the `Delete Notifications` is set to `Never`, in order to store old notifications
 
 <div align="center">
-  <img src="https://github.com/metakgp/naarad/assets/86282911/45ab7ef1-91d4-4fea-8375-6b0c70c4b9c4">
+  <img src="https://github.com/metakgp/naarad/assets/86282911/a1f80492-9a8d-4d91-9a9a-1dfa86ac0842">
 </div>
 
 ### Subscribing to MFTP
@@ -86,14 +109,84 @@ If the [automatic](#automatic) method doesn't work, then you can do it manually 
 
 ### Subscribing to MFTP
 
+0. Make sure to click `Enable Now` for the banner regarding `Switching to WebSockets...`
 1. Click on `+` icon in bottom right corner
 2. Enter topic name as: `kgp-mftp`
 3. Check `Use another server`
 4. Replace `https://ntfy.sh` with `https://naarad.metakgp.org`
 5. Press the `Subscribe` button
 6. It will now prompt you to Login, enter the credentials received during [user registration](#user-registration)
-7. Click the `Login` button
+7. Click the `Login` button, you will be taken to the topic page
 
-| ![](https://github.com/metakgp/naarad/assets/86282911/2e6cb3df-d65b-41a0-bcf0-7623607bf56b) | ![](https://github.com/metakgp/naarad/assets/86282911/0a65338a-705d-47dd-8fa7-e399e23f4908) |
+| ![](https://github.com/metakgp/naarad/assets/86282911/34db1e2a-f269-40fd-8e21-9a933f1ed8cb) | ![](https://github.com/metakgp/naarad/assets/86282911/2e6cb3df-d65b-41a0-bcf0-7623607bf56b) |
 | ---------------------------------- | -------------------------------- |
-| ![](https://github.com/metakgp/naarad/assets/86282911/7969077b-32bf-4087-ab46-a09c89c85cc7) | ![](https://github.com/metakgp/naarad/assets/86282911/105834fe-8744-4d88-af61-4a7624f8db61) |
+| ![](https://github.com/metakgp/naarad/assets/86282911/0a65338a-705d-47dd-8fa7-e399e23f4908) | ![](https://github.com/metakgp/naarad/assets/86282911/7969077b-32bf-4087-ab46-a09c89c85cc7) |
+
+### Configuring the topic
+
+0. Once you [subscribe to the topic](#subscribing-to-mftp), then follow then configure the settings as below
+1. Click on the three dots on top-right corner and click on `Subscription Settings`
+2. Configure the settings as shown in the second image below
+
+| ![](https://github.com/metakgp/naarad/assets/86282911/a3cfdff6-2267-4561-9c7c-bde645afe56f) | ![](https://github.com/metakgp/naarad/assets/86282911/4402c5e0-6a67-4381-af73-6cc01dede855) |
+| ---------------------------------- | -------------------------------- |
+
+### Downloading Attachment
+
+Attachment URLs are protected by [heimdall](https://heimdall.metakgp.org/). Heimdall sessions are created when you authorise via your institute email, as done during steps 2,3,4 while [registering a user](#user-registration). Hence, it is not possible to directly dwonlaod the attachments via the mobile application, while, the process for the same on webapp is straightforward. Follow the steps below to download the attachment via your mobile devices.
+
+1. Tap on the attachment banner
+2. A context-menu will appear, tap on `Copy URL`. You will receive a toast message, saying `URL copied to clipboard`
+3. Open your choice of browser on your mobile device and paste the copied URL
+4. You will be redirected to heimdall. Authorise with your institute email as done during the steps 2,3,4 while [registering a user](#user-registration). This is a one time step
+5. The pdf will be downloaded locally
+
+| ![](https://github.com/user-attachments/assets/f1876107-fb80-4588-ab40-c80f51e07c1f) | ![](https://github.com/user-attachments/assets/68e5e414-4190-4fc9-9914-4c1d265c6c68) |
+|-------|-------|
+| ![](https://github.com/user-attachments/assets/1744c621-52a0-43a4-b3e2-bd745ce78678) | ![](https://github.com/user-attachments/assets/5911bdf1-1a98-4459-a938-5c4169aa0bfe) |
+
+### Disabling Battery Optimisations
+
+In order to receive unrestricted real-time notifications on the mobile applications, follow the steps below for your specifc device(s).
+
+> [!Tip]
+> It is also recommended to disable "Battery Saver" to not have any unwanted delay.
+
+#### iOS
+
+Enable `Background App Refresh` for the __ntfy__ app on both __Wifi & mobile data__.
+
+> [!Note]
+> Observe the following differences before watching the video:
+> - Make sure the setting is enabled for both __Wifi & Mobile Data__
+> - Make sure it is enabled for __NTFY__ app
+> - If you don't find the setting as shown in the video, search for a similar setting for your version of iOS
+
+Here's the general tutorial to [Turn On Background App Refresh in iOS](https://www.youtube.com/watch?v=QYh62JM-Aiw).
+
+#### Android
+
+Disable `Battery Optimisation` for the __ntfy__ app.
+
+> [!Warning]
+> This particular setting will differ from device to device. The place it is located at, the way it is written, everything might differ slightly from one vendor to another vendor. So make sure:
+> - When you search on the web, you provide your device model - for better results
+> - Search for a similar setting on your own for your device manually
+
+Here are the general tutorials, to unrestrict background app activity:
+- [From `APP INFO`](https://www.youtube.com/watch?v=QEkSJgurosE)
+- [From `Settings`](https://www.youtube.com/watch?v=M5i6lD9zAXE)
+
+> [!Note]
+> Make sure you follow both the ways and see that both the methods are in sync (have the same thing - `Unrestricted Battery Usage`)
+
+## Changing User Password
+
+1. Click on `Account` on the left pane of the screen
+2. Click on `pencil icon` on right of "password" entry
+3. Fill the _current_, _new_ and _confirm_ password fields
+4. Click on `Change Password` button
+
+<div align="center">
+  <img src="https://github.com/metakgp/naarad/assets/86282911/647f290d-51e8-4340-8033-61e47e326f74">
+</div>

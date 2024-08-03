@@ -1,5 +1,7 @@
 services:
     naarad:
+        image: metakgporg/naarad
+        container_name: naarad
         build:
             context: .
             dockerfile: Dockerfile
@@ -15,6 +17,7 @@ services:
             - nginx-config-volume:/etc/nginx/sites-enabled
             - naarad-cache:/var/cache/ntfy
             - naarad-auth:/var/lib/ntfy
+            - ./server.yml:/etc/ntfy/server.yml
         healthcheck:
             test:
                 [
@@ -28,7 +31,8 @@ services:
         restart: unless-stopped
 
     naarad-api:
-        image: naarad-api
+        image: metakgporg/naarad-api
+        container_name: naarad-api
         build:
             context: backend/
             dockerfile: Dockerfile
@@ -43,8 +47,8 @@ services:
         volumes:
             - nginx-config-volume:/etc/nginx/sites-enabled
             - naarad-auth:/var/lib/ntfy
-            - ./backend/credentials.json:/credentials.json
-            - ./backend/token.json:/token.json
+            - ./backend/credentials.json:/app/credentials.json
+            - ./backend/token.json:/app/token.json
         restart: unless-stopped
 
 networks:
